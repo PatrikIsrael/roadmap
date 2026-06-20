@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap — Engenheiro de Software | Patrik Israel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #00ff88;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 1.5rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,255,136,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+
+  header h1 span {
+    color: var(--accent);
+  }
+
+  .header-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    margin: 1.5rem 1.5rem 0;
+    background: var(--border);
+    border-radius: 4px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 1s ease;
+    border-radius: 4px;
+  }
+  .progress-label {
+    margin: 0.4rem 1.5rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.78rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab:hover:not(.active) {
+    color: var(--text);
+  }
+
+  /* CONTENT */
+  .content {
+    display: none;
+    padding: 1.5rem;
+  }
+  .content.active { display: block; }
+
+  /* LAYER CARD */
+  .layer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .layer:hover {
+    border-color: #2a2a3e;
+  }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .layer-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    min-width: 28px;
+  }
+
+  .layer-icon {
+    font-size: 1.1rem;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .layer-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .layer-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-base { background: rgba(0,255,136,0.12); color: var(--accent); }
+  .tag-core { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .tag-lang { background: rgba(245,158,11,0.12); color: var(--accent3); }
+  .tag-web  { background: rgba(59,130,246,0.12); color: #60a5fa; }
+  .tag-prod { background: rgba(236,72,153,0.12); color: #f472b6; }
+
+  .layer-chevron {
+    color: var(--muted);
+    font-size: 0.75rem;
+    transition: transform 0.2s;
+  }
+
+  .layer.open .layer-chevron { transform: rotate(90deg); }
+
+  .layer-body {
+    display: none;
+    padding: 0 1.2rem 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+  .layer.open .layer-body { display: block; }
+
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .concept {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .concept-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .concept-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .concept.highlight {
+    border-color: rgba(0,255,136,0.2);
+  }
+  .concept.highlight .concept-title {
+    color: var(--accent);
+  }
+
+  .layer-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.8rem;
+    line-height: 1.6;
+    padding-top: 0.8rem;
+  }
+
+  .why-box {
+    background: rgba(0,255,136,0.05);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 0.7rem 0.9rem;
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: #a7f3d0;
+    line-height: 1.5;
+  }
+
+  .why-box strong {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  /* AKITA SECTION */
+  .akita-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .akita-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem;
+  }
+
+  .akita-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    min-width: 36px;
+    padding-top: 0.1rem;
+  }
+
+  .akita-info {}
+
+  .akita-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.15rem;
+  }
+
+  .akita-connects {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* LINKEDIN SECTION */
+  .post-template {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.6rem;
+  }
+
+  .post-body {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-line;
+    font-family: var(--sans);
+  }
+
+  .post-body .placeholder {
+    color: var(--accent3);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  /* GLOSSARY */
+  .glossary-item {
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+  }
+  .glossary-item:last-child { border-bottom: none; }
+
+  .glossary-term {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .glossary-def {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .glossary-boss {
+    display: inline-block;
+    font-size: 0.65rem;
+    background: rgba(245,158,11,0.12);
+    color: var(--accent3);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-family: var(--mono);
+    margin-top: 0.3rem;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .check-item input[type="checkbox"] {
+    accent-color: var(--accent);
+    margin-top: 0.2rem;
+    min-width: 14px;
+  }
+
+  .check-item.done {
+    color: var(--accent);
+    text-decoration: line-through;
+    text-decoration-color: rgba(0,255,136,0.4);
+  }
+
+  .week-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .week-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .week-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">// roadmap</div>
+  <h1>Engenheiro de Software <span>de Verdade</span></h1>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+<div class="progress-label" id="progressLabel">calculando progresso...</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('camadas')">Camadas</button>
+  <button class="tab" onclick="showTab('akita')">Akita Order</button>
+  <button class="tab" onclick="showTab('linkedin')">LinkedIn</button>
+  <button class="tab" onclick="showTab('glossario')">Glossário</button>
+  <button class="tab" onclick="showTab('semanas')">Semanas</button>
+</div>
+
+<!-- TAB: CAMADAS -->
+<div class="content active" id="tab-camadas">
+
+  <div class="section-title">// da base ao topo — 5 camadas</div>
+
+  <!-- CAMADA 1 -->
+  <div class="layer" onclick="toggleLayer(this)">
+    <div class="layer-header">
+      <span class="layer-num">01</span>
+      <span class="layer-icon">⚡</span>
+      <span class="layer-title">Hardware & Arquitetura</span>
+      <span class="layer-tag tag-base">BASE</span>
+      <span class="layer-chevron">▶</span>
+    </div>
+    <div class="layer-body">
+      <div class="concept-grid">
+        <div class="concept highlight">
+          <div class="concept-title">CPU & Núcleos</div>
+          <div class="concept-desc">Como o processador executa instruções. Clock, pipeline, múltiplos núcleos.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">Assembly</div>
+          <div class="concept-desc">Linguagem mais próxima do hardware. Tudo que você escreve vira isso.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Registradores</div>
+          <div class="concept-desc">Memória ultra-rápida dentro da CPU. EAX, EBX, ESP...</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Ciclo Fetch-Decode-Execute</div>
+          <div class="concept-desc">O loop eterno da CPU: busca instrução → decodifica → executa.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Cache L1/L2/L3</div>
+          <div class="concept-desc">Memórias intermediárias entre CPU e RAM. Cada nível mais lento e maior.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Von Neumann</div>
+          <div class="concept-desc">Arquitetura base de todo computador moderno. Programa na memória.</div>
+        </div>
+      </div>
+      <div class="why-box">
+        <strong>por que isso importa</strong>
+        Quando você entende que um loop em Python vira dezenas de instruções Assembly que a CPU executa uma por vez por núcleo, você começa a entender performance, bottlenecks e por que certas escolhas de código custam mais caro.
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMADA 2 -->
+  <div class="layer" onclick="toggleLayer(this)">
+    <div class="layer-header">
+      <span class="layer-num">02</span>
+      <span class="layer-icon">🧠</span>
+      <span class="layer-title">Sistema Operacional & Memória</span>
+      <span class="layer-tag tag-core">CORE</span>
+      <span class="layer-chevron">▶</span>
+    </div>
+    <div class="layer-body">
+      <div class="concept-grid">
+        <div class="concept highlight">
+          <div class="concept-title">Threads</div>
+          <div class="concept-desc">Unidade de execução dentro de um processo. Um processo pode ter várias threads.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">Processos</div>
+          <div class="concept-desc">Programa em execução. Tem memória própria isolada.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Stack vs Heap</div>
+          <div class="concept-desc">Stack: variáveis locais, rápida, limitada. Heap: alocação dinâmica, flexível.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">GIL do Python</div>
+          <div class="concept-desc">Global Interpreter Lock. Por que Python não usa múltiplos núcleos facilmente.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Scheduler</div>
+          <div class="concept-desc">O SO decide qual thread roda agora. Context switch tem custo.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Syscalls</div>
+          <div class="concept-desc">Seu programa pedindo algo ao SO: ler arquivo, abrir socket, alocar memória.</div>
+        </div>
+      </div>
+      <div class="why-box">
+        <strong>por que isso importa</strong>
+        Seu chefe pediu explicitamente threads e núcleos. Django em produção roda múltiplos workers. Entender threads te explica deadlocks, race conditions e por que async/await existe.
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMADA 3 -->
+  <div class="layer" onclick="toggleLayer(this)">
+    <div class="layer-header">
+      <span class="layer-num">03</span>
+      <span class="layer-icon">🔤</span>
+      <span class="layer-title">C e como Python funciona por baixo</span>
+      <span class="layer-tag tag-lang">LINGUAGEM</span>
+      <span class="layer-chevron">▶</span>
+    </div>
+    <div class="layer-body">
+      <div class="concept-grid">
+        <div class="concept highlight">
+          <div class="concept-title">CPython</div>
+          <div class="concept-desc">O interpretador Python escrito em C. Seu código Python vira bytecode que C executa.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">Bytecode</div>
+          <div class="concept-desc">Código intermediário. Python compila pra .pyc antes de executar.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Como um for funciona</div>
+          <div class="concept-desc">Chama __iter__, depois __next__ em loop até StopIteration. Tudo em C.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Ponteiros (C)</div>
+          <div class="concept-desc">Variável que guarda endereço de memória. Base de como Python gerencia objetos.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Garbage Collector</div>
+          <div class="concept-desc">Python libera memória automaticamente via reference counting + GC cíclico.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">dis module</div>
+          <div class="concept-desc">dis.dis(funcao) mostra o bytecode Python. Você vê o que realmente executa.</div>
+        </div>
+      </div>
+      <div class="why-box">
+        <strong>por que isso importa</strong>
+        Quando você usa uma lista vs um gerador, um dict vs uma lista, você toma decisões de memória e performance. Entender o CPython te faz escolher a estrutura certa, não a que parece mais fácil.
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMADA 4 -->
+  <div class="layer" onclick="toggleLayer(this)">
+    <div class="layer-header">
+      <span class="layer-num">04</span>
+      <span class="layer-icon">🌐</span>
+      <span class="layer-title">Redes, HTTP e Pacotes</span>
+      <span class="layer-tag tag-web">WEB</span>
+      <span class="layer-chevron">▶</span>
+    </div>
+    <div class="layer-body">
+      <div class="concept-grid">
+        <div class="concept highlight">
+          <div class="concept-title">Pacotes TCP/IP</div>
+          <div class="concept-desc">Como dados viajam na rede. Fragmentados em pacotes com header e payload.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">HTTP/HTTPS</div>
+          <div class="concept-desc">Protocolo de aplicação. Request-Response. Verbos: GET, POST, PUT, DELETE.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">DNS</div>
+          <div class="concept-desc">Traduz nome de domínio em IP. Antes de qualquer conexão isso acontece.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Sockets</div>
+          <div class="concept-desc">API do SO pra comunicação de rede. Django usa isso por baixo.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Headers HTTP</div>
+          <div class="concept-desc">Metadados da requisição: Content-Type, Authorization, Cache-Control...</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Status Codes</div>
+          <div class="concept-desc">200, 201, 400, 401, 403, 404, 500. Cada um tem significado preciso.</div>
+        </div>
+      </div>
+      <div class="why-box">
+        <strong>por que isso importa</strong>
+        Seu chefe citou pacotes HTTP e aplicação. Todo sistema web é HTTP. Entender o protocolo te permite debugar problemas de rede, implementar autenticação correta e usar cache do jeito certo.
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMADA 5 -->
+  <div class="layer" onclick="toggleLayer(this)">
+    <div class="layer-header">
+      <span class="layer-num">05</span>
+      <span class="layer-icon">🗄️</span>
+      <span class="layer-title">Banco de Dados, ORM e Cache</span>
+      <span class="layer-tag tag-prod">PRODUÇÃO</span>
+      <span class="layer-chevron">▶</span>
+    </div>
+    <div class="layer-body">
+      <div class="concept-grid">
+        <div class="concept highlight">
+          <div class="concept-title">SQL puro</div>
+          <div class="concept-desc">SELECT, JOIN, INDEX, EXPLAIN. Base antes de qualquer ORM.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">Django ORM</div>
+          <div class="concept-desc">Traduz Python em SQL. Model.objects.filter() vira um SELECT com WHERE.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">N+1 Problem</div>
+          <div class="concept-desc">Loop que faz uma query por item. select_related() e prefetch_related() resolvem.</div>
+        </div>
+        <div class="concept highlight">
+          <div class="concept-title">Cache (Redis)</div>
+          <div class="concept-desc">Memória ultra-rápida. Evita repetir queries pesadas. Seu chefe citou isso.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Índices</div>
+          <div class="concept-desc">Estrutura que acelera busca. Sem índice = full table scan = lento.</div>
+        </div>
+        <div class="concept">
+          <div class="concept-title">Transactions</div>
+          <div class="concept-desc">ACID: Atomicidade, Consistência, Isolamento, Durabilidade. Dados íntegros.</div>
+        </div>
+      </div>
+      <div class="why-box">
+        <strong>por que isso importa</strong>
+        Seu chefe citou ORM, cache e "como fazer sem gastar muitas requisições". O N+1 problem é o erro mais comum de devs júnior. Quem entende SQL não usa ORM às cegas — vê o que está sendo gerado e otimiza.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB: AKITA ORDER -->
+<div class="content" id="tab-akita">
+  <div class="section-title">// playlist "Programming Concepts" — ordem de estudo</div>
+  <div class="akita-list">
+    <div class="akita-item">
+      <span class="akita-num">#36–38</span>
+      <div class="akita-info">
+        <div class="akita-title">Mercado de TI + Conhecimentos Básicos para Iniciantes</div>
+        <div class="akita-connects">→ contexto geral · por que aprender os fundamentos</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#40–41</span>
+      <div class="akita-info">
+        <div class="akita-title">Entendendo Back-End para Iniciantes (Parte 1 e 2)</div>
+        <div class="akita-connects">→ camada 4 · HTTP · request-response · servidores</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#80–81</span>
+      <div class="akita-info">
+        <div class="akita-title">Guia Hardcore de Introdução à Computação + Super Mario</div>
+        <div class="akita-connects">→ camada 1 · CPU · bits · hardware real</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#86</span>
+      <div class="akita-info">
+        <div class="akita-title">O Computador de Turing e Von Neumann</div>
+        <div class="akita-connects">→ camada 1 · arquitetura base · por que computadores funcionam assim</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#95</span>
+      <div class="akita-info">
+        <div class="akita-title">Árvores: O Começo de TUDO — Estruturas de Dados e Algoritmos</div>
+        <div class="akita-connects">→ base de algoritmos · indexação em banco de dados</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#98</span>
+      <div class="akita-info">
+        <div class="akita-title">A Longa História de CPUs e GPUs</div>
+        <div class="akita-connects">→ camada 1 · evolução do hardware · núcleos · paralelismo</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#136</span>
+      <div class="akita-info">
+        <div class="akita-title">Python? Java? Rust? Qual a Diferença? Discutindo Linguagens</div>
+        <div class="akita-connects">→ camada 3 · onde Python se encaixa · tipagem · compilado vs interpretado</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#139</span>
+      <div class="akita-info">
+        <div class="akita-title">Entendendo Funcionamento de Containers</div>
+        <div class="akita-connects">→ camada 2 · processos isolados · produção · Docker</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#143</span>
+      <div class="akita-info">
+        <div class="akita-title">Discutindo sobre Banco de Dados — Dos primórdios a Big Data</div>
+        <div class="akita-connects">→ camada 5 · SQL · índices · história dos bancos</div>
+      </div>
+    </div>
+    <div class="akita-item">
+      <span class="akita-num">#144</span>
+      <div class="akita-info">
+        <div class="akita-title">Modelagem de Software — "Ver" vs "Enxergar"</div>
+        <div class="akita-connects">→ pensar como engenheiro · arquitetura de sistemas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: LINKEDIN -->
+<div class="content" id="tab-linkedin">
+  <div class="section-title">// templates de post — sua voz, seu processo</div>
+
+  <div class="post-template">
+    <div class="post-label">template · pós-vídeo Akita</div>
+    <div class="post-body">Hoje assisti o episódio <span class="placeholder">[#XX]</span> do Akitando sobre <span class="placeholder">[tema]</span>.
+
+Uma coisa que eu não sabia: <span class="placeholder">[conceito revelador em 1 frase]</span>.
+
+Na prática isso significa que quando você escreve <span class="placeholder">[código]</span>, por baixo acontece <span class="placeholder">[o que realmente ocorre]</span>.
+
+Isso conecta direto com o que meu chefe pediu: entender a arquitetura, não só escrever código.
+
+Estou documentando essa jornada aqui. Exército → Implementação → Dev Back-End.
+
+Se você também tá nessa transição, segue o fio. 🧵
+
+#Python #BackEnd #CiênciaDaComputação #DesenvolvedorDeSoftware</div>
+  </div>
+
+  <div class="post-template">
+    <div class="post-label">template · conceito técnico explicado</div>
+    <div class="post-body">Você sabia que um simples <span class="placeholder">for i in lista</span> em Python não é simples?
+
+Por baixo o interpretador (CPython, escrito em C) chama __iter__ na lista, cria um objeto iterador, e chama __next__ em loop até receber StopIteration.
+
+Isso tudo são chamadas de função em C rodando no seu processador.
+
+Entender isso não é frescura. É o que seu chefe pede quando fala "entenda a arquitetura".
+
+Estou estudando isso do zero, com contexto militar: disciplina > velocidade.
+
+O que você ainda não entende sobre as ferramentas que usa todo dia?
+
+#Python #CPython #EngenhariaDeSoftware</div>
+  </div>
+
+  <div class="post-template">
+    <div class="post-label">template · milestone de projeto</div>
+    <div class="post-body">Acabei de subir no GitHub: <span class="placeholder">[nome do projeto]</span>.
+
+É um <span class="placeholder">[descrição simples]</span> construído com <span class="placeholder">[tecnologias]</span>.
+
+Não é perfeito. Mas é real, funciona, e eu escrevi cada linha sabendo o porquê.
+
+Próximo passo: <span class="placeholder">[o que vem depois]</span>.
+
+github.com/PatrikIsrael
+
+#Python #Django #GitHub #PortfolioDeDesenvolvedor</div>
+  </div>
+</div>
+
+<!-- TAB: GLOSSÁRIO -->
+<div class="content" id="tab-glossario">
+  <div class="section-title">// termos que seu chefe usou — definições precisas</div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">ORM</div>
+    <div class="glossary-def">Object-Relational Mapping. Camada que traduz objetos Python em SQL automaticamente. No Django: User.objects.filter(ativo=True) vira SELECT * FROM users WHERE ativo=1. O risco é usar sem saber o SQL que está sendo gerado.</div>
+    <div class="glossary-boss">seu chefe citou</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">Cache</div>
+    <div class="glossary-def">Armazenamento temporário de dados frequentemente acessados. Redis é o mais comum com Django. Resultado de uma query pesada vai pro cache, próximas requisições não batem no banco. Seu chefe falou em "gastar menos requisições".</div>
+    <div class="glossary-boss">seu chefe citou</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">Thread</div>
+    <div class="glossary-def">Unidade de execução dentro de um processo. Um processo pode ter várias threads rodando "ao mesmo tempo" (compartilhando a mesma memória). Python tem o GIL que limita threads a rodar uma por vez no CPython.</div>
+    <div class="glossary-boss">seu chefe citou</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">Assembly</div>
+    <div class="glossary-def">Linguagem mais próxima das instruções do processador. MOV, ADD, JMP são instruções reais da CPU. C compila pra Assembly. Python (via CPython em C) vira Assembly no final. Tudo vira Assembly.</div>
+    <div class="glossary-boss">seu chefe citou</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">Pacote HTTP</div>
+    <div class="glossary-def">Unidade de dados que trafega na rede. Tem header (metadados: método, URL, tipo de conteúdo, autenticação) e body (dados em si: JSON, HTML, arquivo). Django recebe e responde com pacotes HTTP.</div>
+    <div class="glossary-boss">seu chefe citou</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">CPython</div>
+    <div class="glossary-def">A implementação padrão do Python, escrita em C. Quando você instala Python do python.org, está instalando CPython. Existe também PyPy (escrito em Python), Jython (Java) e outros.</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">N+1 Problem</div>
+    <div class="glossary-def">Bug de performance comum com ORM. Você busca N registros, depois faz 1 query pra cada = N+1 queries. Solução Django: select_related() para FK e prefetch_related() para M2M.</div>
+  </div>
+
+  <div class="glossary-item">
+    <div class="glossary-term">GIL</div>
+    <div class="glossary-def">Global Interpreter Lock. Mecanismo do CPython que garante que apenas uma thread execute bytecode Python por vez. Por isso Python não aproveita múltiplos núcleos facilmente com threads. Solução: multiprocessing ou async.</div>
+  </div>
+</div>
+
+<!-- TAB: SEMANAS -->
+<div class="content" id="tab-semanas">
+  <div class="section-title">// plano de 1h/dia — consistência &gt; intensidade</div>
+
+  <div class="week-block">
+    <div class="week-title"><span class="week-dot"></span>Semanas 1–2 · Hardware e CPU</div>
+    <div class="checklist" id="week1">
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #80–81 · Como computadores funcionam</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #86 · Turing e Von Neumann</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #98 · História de CPUs e GPUs</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Post LinkedIn: "o que é uma CPU de verdade"</label>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title"><span class="week-dot"></span>Semanas 3–4 · Back-End e Redes</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #40–41 · Entendendo Back-End</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Estudar HTTP: verbos, headers, status codes</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Usar Postman pra ver requests reais</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Post LinkedIn: "o que acontece quando você aperta Enter no browser"</label>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title"><span class="week-dot"></span>Semanas 5–6 · Python por dentro</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #136 · Python vs Java vs Rust</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Rodar dis.dis() em funções próprias</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Entender __iter__ e __next__ na prática</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Post LinkedIn: "o que um for faz de verdade"</label>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title"><span class="week-dot"></span>Semanas 7–8 · Banco de Dados e ORM</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #143 · Banco de Dados dos primórdios a Big Data</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> SQL: SELECT, JOIN, INDEX, EXPLAIN</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Django ORM: ver o SQL gerado com print(qs.query)</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Reproduzir e resolver um N+1 problem</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Post LinkedIn: "por que ORM sem SQL é perigoso"</label>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title"><span class="week-dot"></span>Semanas 9–10 · Threads, Processos e Cache</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Akita #139 · Containers e processos isolados</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Entender GIL e multiprocessing em Python</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Implementar cache simples com Django + Redis</label>
+      <label class="check-item"><input type="checkbox" onchange="updateProgress()"> Post LinkedIn: "threads, núcleos e por que Python tem o GIL"</label>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function toggleLayer(el) {
+    el.classList.toggle('open');
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const done = document.querySelectorAll('.checklist input[type="checkbox"]:checked');
+    const pct = Math.round((done.length / all.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = `${done.length} de ${all.length} tarefas concluídas · ${pct}% do roadmap`;
+
+    // Mark done items
+    document.querySelectorAll('.check-item').forEach(item => {
+      const cb = item.querySelector('input[type="checkbox"]');
+      if (cb && cb.checked) item.classList.add('done');
+      else item.classList.remove('done');
+    });
+  }
+
+  // Init
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '0%';
+    updateProgress();
+  }, 300);
+</script>
+
+</body>
+</html>
