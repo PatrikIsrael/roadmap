@@ -58,7 +58,7 @@ Em breve:
 - 📖 [Documentação oficial do Python](https://docs.python.org/3/)
 - 🔬 [CPython no GitHub](https://github.com/python/cpython)
 - 📋 [PEPs — Python Enhancement Proposals](https://peps.python.org)
-- 🛠️ [Curso Python — Otávio Miranda (Udemy)]([https://www.udemy.com/course/curso-de-python-3-do-basico-ao-avancado/])
+- 🛠️ [Curso Python — Otávio Miranda (Udemy)](https://www.udemy.com/course/curso-de-python-3-do-basico-ao-avancado)
 
 ---
 
